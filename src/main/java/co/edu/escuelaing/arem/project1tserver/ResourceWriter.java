@@ -112,7 +112,7 @@ class ResourceWriter {
 
     private void htmlResource(String resource) {
         try {
-            BufferedReader bf = new BufferedReader(new FileReader("src/main/resources/" + resource));
+            BufferedReader bf = new BufferedReader(new FileReader("src/main/resources" + resource));
             StringBuilder outputLine = new StringBuilder();
             outputLine.append("HTTP/1.1 200 OK\r\n");
             outputLine.append("Content-Type: text/html\n");
