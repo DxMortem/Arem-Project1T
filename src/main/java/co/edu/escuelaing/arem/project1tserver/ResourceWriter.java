@@ -3,11 +3,11 @@ package co.edu.escuelaing.arem.project1tserver;
 import java.io.*;
 import java.net.Socket;
 
-public class ResourceWriter {
+class ResourceWriter {
 
     private Socket clientSocket;
 
-    public ResourceWriter(String resource, Socket clientSocket) throws IOException {
+    ResourceWriter(String resource, Socket clientSocket) {
         this.clientSocket = clientSocket;
         if (resource.toLowerCase().contains(".html")){htmlResource(resource);}
         else if (resource.toLowerCase().contains(".png")){pngResource(resource);}
@@ -16,12 +16,11 @@ public class ResourceWriter {
         }
     }
 
-    private void raise501() throws IOException {
-
-        PrintWriter out = new PrintWriter(
-                this.clientSocket.getOutputStream(), true);
-
-        String outputLine = "HTTP/1.1 501 Method Not Implemented\r\n"
+    private void raise501() {
+        PrintWriter out;
+        try {
+            out = new PrintWriter(this.clientSocket.getOutputStream(), true);
+            String outputLine = "HTTP/1.1 501 Method Not Implemented\r\n"
                     + "Content-Type: text/html\r\n"
                     + "\r\n"
                     + "<!DOCTYPE html>"
@@ -35,34 +34,39 @@ public class ResourceWriter {
                     + "</body>"
                     + "</html>";
 
-        out.println(outputLine);
-        out.close();
+            out.println(outputLine);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void raise404() throws IOException {
+    private void raise404() {
+        try {
+            PrintWriter out;
+            out = new PrintWriter(this.clientSocket.getOutputStream(), true);
+            String outputLine = "HTTP/1.1 404 Not Found\r\n"
+                    + "Content-Type: text/html\r\n"
+                    + "\r\n"
+                    + "<!DOCTYPE html>"
+                    + "<html>"
+                    + "<head>"
+                    + "<meta charset=\"UTF-8\">"
+                    + "<title>404 Not Found</title>\n"
+                    + "</head>"
+                    + "<body>"
+                    + "<h1>Error 404: Not Found</h1>"
+                    + "</body>"
+                    + "</html>";
 
-        PrintWriter out = new PrintWriter(
-                this.clientSocket.getOutputStream(), true);
-
-        String outputLine = "HTTP/1.1 404 Not Found\r\n"
-                + "Content-Type: text/html\r\n"
-                + "\r\n"
-                + "<!DOCTYPE html>"
-                + "<html>"
-                + "<head>"
-                + "<meta charset=\"UTF-8\">"
-                + "<title>404 Not Found</title>\n"
-                + "</head>"
-                + "<body>"
-                + "<h1>Error 404: Not Found</h1>"
-                + "</body>"
-                + "</html>";
-
-        out.println(outputLine);
-        out.close();
+            out.println(outputLine);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void pngResource(String resource) throws IOException {
+    private void pngResource(String resource) {
 
 //        PrintWriter out = new PrintWriter(
 //                this.clientSocket.getOutputStream(), true);
@@ -106,7 +110,7 @@ public class ResourceWriter {
 
     }
 
-    private void htmlResource(String resource) throws IOException {
+    private void htmlResource(String resource) {
         try {
             BufferedReader bf = new BufferedReader(new FileReader("src/main/resources/" + resource));
             StringBuilder outputLine = new StringBuilder();
