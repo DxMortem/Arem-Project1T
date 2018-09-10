@@ -7,7 +7,7 @@ import java.net.Socket;
 
 public class InputReader {
 
-    private String resource = null;
+    private String resource = "";
     private BufferedReader in;
 
     public InputReader(Socket cs) throws IOException {
