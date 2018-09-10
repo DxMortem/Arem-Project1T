@@ -10,11 +10,14 @@ class ResourceWriter {
     ResourceWriter(String resource, Socket clientSocket) {
         this.clientSocket = clientSocket;
         if (resource.toLowerCase().contains(".html")){htmlResource(resource);}
+        else if (resource.toLowerCase().contains(".css")){cssResource(resource);}
         else if (resource.toLowerCase().contains(".png")){pngResource(resource);}
         else{
             raise501();
         }
     }
+
+
 
     private void raise501() {
         PrintWriter out;
@@ -134,4 +137,27 @@ class ResourceWriter {
         }
     }
 
+    private void cssResource(String resource) {
+        try {
+            BufferedReader bf = new BufferedReader(new FileReader("src/main/resources" + resource));
+            StringBuilder outputLine = new StringBuilder();
+            outputLine.append("HTTP/1.1 200 OK\r\n");
+            outputLine.append("Content-Type: text/css\n");
+            outputLine.append("\r\n\r\n");
+            String bfRead;
+            while ((bfRead = bf.readLine()) != null) {
+                outputLine.append(bfRead);
+            }
+            PrintWriter out = new PrintWriter(
+                    this.clientSocket.getOutputStream(), true);
+
+
+            out.println(outputLine.toString());
+            out.close();
+
+        }catch (IOException ex){
+            raise404();
+            System.err.println("Error en la lectura de el archivo");
+        }
+    }
 }
